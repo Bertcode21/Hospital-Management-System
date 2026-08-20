@@ -38,7 +38,7 @@ const slides: WelcomeSlide[] = [
     title: "Manage Your Healthcare",
     description:
       "Book appointments, view doctors, manage your medical information, and stay connected with your healthcare team.",
-    image: require("../assets/images/hospital-hero2.jpg"),
+    image: require("../assets/images/hospital-hero.jpg"),
     icon: "calendar",
   },
   {
@@ -46,7 +46,7 @@ const slides: WelcomeSlide[] = [
     title: "Healthcare Made Simple",
     description:
       "Everything you need in one place. Get started today and enjoy a smarter, faster, and more convenient healthcare experience.",
-    image: require("../assets/images/hospital-hero3.jpg"),
+    image: require("../assets/images/hospital-hero.jpg"),
     icon: "heart",
   },
 ];

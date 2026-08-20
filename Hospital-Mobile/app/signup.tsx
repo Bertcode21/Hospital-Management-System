@@ -188,7 +188,7 @@ export default function SignupScreen() {
 
               <TextInput
                 style={styles.input}
-                placeholder="Doctor, Nurse, Administrator..."
+                placeholder="Register as Doctor or Patient"
                 placeholderTextColor="#A0AEC0"
                 value={role}
                 onChangeText={setRole}
@@ -294,6 +294,7 @@ export default function SignupScreen() {
             <Text style={styles.signupButtonText}>
               Create Account
             </Text>
+            
 
             <Ionicons
               name="arrow-forward"

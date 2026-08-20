@@ -3,21 +3,27 @@ const Patient = require("../model/patientmodel");
 const getPatients = async (req, res) => {
   try {
     const patients = await Patient.find()
-      .populate(
-        "user",
-        "firstName lastName email phone profileImage"
-      )
-      .sort({ createdAt: -1 });
+      .populate("user", "firstName lastName email phone role");
 
-    res.json({
+    patients.sort((a, b) => {
+      const nameA = a.user?.firstName?.toLowerCase() || "";
+      const nameB = b.user?.firstName?.toLowerCase() || "";
+
+      return nameA.localeCompare(nameB);
+    });
+
+    res.status(200).json({
       success: true,
       count: patients.length,
       patients,
     });
   } catch (error) {
+    console.error("Get patients error:", error);
+
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Failed to retrieve patients",
+      error: error.message,
     });
   }
 };
