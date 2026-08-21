@@ -64,6 +64,14 @@ const register = async (req, res) => {
 
     const token = generateToken(user._id);
 
+    /// to make sure only patients and doctors can register, we can check the role here. If the role is not "Patient" or "Doctor", we can return an error response. This will prevent any other roles from being registered.
+  if (role !== "patient" && role !== "doctor") {
+  return res.status(403).json({
+    success: false,
+    message: "Only Patient and Doctor accounts can be registered.",
+  });
+}
+
     res.status(201).json({
       success: true,
       message: "Account created successfully.",

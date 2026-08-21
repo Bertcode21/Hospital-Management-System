@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import api from './api/services';
 import {
   View,
   Text,
@@ -17,9 +18,61 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // We will connect this to Express + MongoDB next.
     console.log("Login:", { email, password });
+    
+    if (!email.trim()) {
+    alert("Please enter your email address.");
+    return;
+  }
+
+  if (!password) {
+    alert("Please enter your password.");
+    return;
+  }
+
+
+  // sendig login credential to the backend
+  try{
+   console.log("Sending Login request...")
+
+   const response = await api.post("/auth/login", {
+     email: email.trim().toLowerCase(),
+      password,
+   })
+
+   console.log("Login Response: ", response.data)
+
+   if (!response.data.success){
+  alert(response.data.message || "Login Failed")
+  return;
+   }
+
+
+   // to check user
+   const user = response.data.user;
+   console.log("looged user: ", user);
+   console.log("user role: ", user.role );
+
+
+   /// router or Navigate to their respective dashbaord
+
+   if(user.role === "admin"){
+  router.replace("/admin/dashboard")
+   }else if (user.role === "doctor"){
+    router.replace("/doctors/dashboard");
+   }else if (user.role === "patient"){
+    router.replace("/patients/dashboard")
+   }else{
+    alert(" Please contact the adminstrator, Your Account does not exists")
+   }
+   console.log("Login successfull")
+   alert("Login successfull..");
+  }catch(error: any){
+    console.error("Login Error: ", error.response?.data || error.message);
+    alert(error.response.message || "An error occurred during login. please try again");
+  }
   };
 
   return (

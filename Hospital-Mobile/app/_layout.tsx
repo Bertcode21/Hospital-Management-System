@@ -8,12 +8,14 @@ export default function RootLayout() {
         screenOptions={{
           headerShown: false,
         }}
-     >
-      <Stack.Screen name ="index" />
-            <Stack.Screen name="login" />
-            <Stack.Screen name="signup" />
-     
-      
+      >
+        <Stack.Screen name="index" />
+        <Stack.Screen name="login" />
+        <Stack.Screen name="signup" />
+
+        <Stack.Screen name="admin/dashboard" />
+        <Stack.Screen name="doctors/dashboard" />
+        <Stack.Screen name="patients/dashboard" />
       </Stack>
     </AuthProvider>
   );

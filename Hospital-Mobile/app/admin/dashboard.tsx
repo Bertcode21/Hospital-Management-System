@@ -276,7 +276,7 @@ export default function HomeScreen() {
             </View>
 
             <Pressable
-              onPress={() => router.push("/admin/billing")}
+              onPress={() => router.push("/components/reports")}
             >
               <Text style={styles.viewAll}>
                 View reports

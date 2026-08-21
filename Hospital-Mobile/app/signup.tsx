@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import api from './api/services';
 import {
   View,
   Text,
@@ -13,7 +14,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 
 export default function SignupScreen() {
-  const [fullName, setFullName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState("");
@@ -24,16 +26,88 @@ export default function SignupScreen() {
   const [showConfirmPassword, setShowConfirmPassword] =
     useState(false);
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
+
     // We will connect this to Express + MongoDB next.
     console.log("Signup:", {
-      fullName,
+      firstName,
+      lastName,
       email,
       phone,
       role,
       password,
       confirmPassword,
     });
+
+    // Validate fields
+  if (!firstName.trim()) {
+    alert("Please enter your full name.");
+    return;
+  }
+  if(!lastName.trim()){
+    alert("Please enter your last name.");
+    return
+  }
+
+  if (!email.trim()) {
+    alert("Please enter your email address.");
+    return;
+  }
+
+  if (!phone.trim()) {
+    alert("Please enter your phone number.");
+    return;
+  }
+  if(!role.trim()){
+    alert("Please enter your role.");
+    return;
+
+  }
+  if(!password){
+    alert("Please enter your password.");
+    return;
+  }
+if(password !== confirmPassword){
+   alert("Passwords do not match.");
+   return;
+}
+
+/// now we we try to send to backend and see
+try{
+console.log("Sending Signup request to backend...");
+
+const response = await api.post("/auth/register",{
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      email: email.trim().toLowerCase(),
+      phone: phone.trim(),
+      role: role.trim(),
+      password,
+})
+
+console.log("Signup response:", response.data);
+if(response.status === 201){
+  alert("Account created successfully! Please log in.");
+  console.log("Signup successful");
+
+      // Clear form
+      setFirstName("");
+      setLastName("")
+      setEmail("");
+      setPhone("");
+      setRole("");
+      setPassword("");
+      setConfirmPassword("");
+  router.replace("/login")
+}
+}catch(error: any){
+ console.log(
+      "Signup error:",
+      error.response?.data || error.message
+    );
+    alert(error.response.data.message || "Unable to register try again")
+}
+
   };
 
   return (
@@ -95,11 +169,11 @@ export default function SignupScreen() {
             system.
           </Text>
 
-          {/* FULL NAME */}
+          {/* FIRST NAME */}
 
           <View style={styles.inputGroup}>
             <Text style={styles.label}>
-              Full name
+              First name
             </Text>
 
             <View style={styles.inputContainer}>
@@ -113,8 +187,33 @@ export default function SignupScreen() {
                 style={styles.input}
                 placeholder="Enter your full name"
                 placeholderTextColor="#A0AEC0"
-                value={fullName}
-                onChangeText={setFullName}
+                value={firstName}
+                onChangeText={setFirstName}
+                autoCapitalize="words"
+              />
+            </View>
+          </View>
+
+        {/* LAST NAME */}
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>
+              First name
+            </Text>
+
+            <View style={styles.inputContainer}>
+              <Ionicons
+                name="person-outline"
+                size={19}
+                color="#718096"
+              />
+
+              <TextInput
+                style={styles.input}
+                placeholder="Enter your full name"
+                placeholderTextColor="#A0AEC0"
+                value={lastName}
+                onChangeText={setLastName}
                 autoCapitalize="words"
               />
             </View>
@@ -172,29 +271,61 @@ export default function SignupScreen() {
             </View>
           </View>
 
-          {/* ROLE */}
+        {/* ROLE */}
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>
-              Role
-            </Text>
+<View style={styles.inputGroup}>
+  <Text style={styles.label}>Account type</Text>
 
-            <View style={styles.inputContainer}>
-              <Ionicons
-                name="briefcase-outline"
-                size={19}
-                color="#718096"
-              />
+  <View style={styles.roleContainer}>
 
-              <TextInput
-                style={styles.input}
-                placeholder="Register as Doctor or Patient"
-                placeholderTextColor="#A0AEC0"
-                value={role}
-                onChangeText={setRole}
-              />
-            </View>
-          </View>
+    <Pressable
+      style={[
+        styles.roleButton,
+        role === "patient" && styles.roleButtonActive,
+      ]}
+      onPress={() => setRole("patient")}
+    >
+      <Ionicons
+        name="person-outline"
+        size={19}
+        color={role === "patient" ? "#FFFFFF" : "#1976D2"}
+      />
+
+      <Text
+        style={[
+          styles.roleButtonText,
+          role === "patient" && styles.roleButtonTextActive,
+        ]}
+      >
+        Patient
+      </Text>
+    </Pressable>
+
+    <Pressable
+      style={[
+        styles.roleButton,
+        role === "doctor" && styles.roleButtonActive,
+      ]}
+      onPress={() => setRole("doctor")}
+    >
+      <Ionicons
+        name="medkit-outline"
+        size={19}
+        color={role === "doctor" ? "#FFFFFF" : "#1976D2"}
+      />
+
+      <Text
+        style={[
+          styles.roleButtonText,
+          role === "doctor" && styles.roleButtonTextActive,
+        ]}
+      >
+        Doctor
+      </Text>
+    </Pressable>
+
+  </View>
+         </View>
 
           {/* PASSWORD */}
 
@@ -498,4 +629,35 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: "#718096",
   },
+  roleContainer: {
+  flexDirection: "row",
+  gap: 10,
+},
+
+roleButton: {
+  flex: 1,
+  height: 51,
+  borderWidth: 1,
+  borderColor: "#1976D2",
+  borderRadius: 14,
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 8,
+  backgroundColor: "#FFFFFF",
+},
+
+roleButtonActive: {
+  backgroundColor: "#1976D2",
+},
+
+roleButtonText: {
+  color: "#1976D2",
+  fontSize: 13,
+  fontWeight: "700",
+},
+
+roleButtonTextActive: {
+  color: "#FFFFFF",
+},
 });

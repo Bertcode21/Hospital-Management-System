@@ -18,47 +18,47 @@ const menuItems: MenuItem[] = [
   {
     label: "Home",
     icon: "home",
-    route: "/",
+    route: "/admin/dashboard",
   },
   {
     label: "Patients",
     icon: "people",
-    route: "/patients",
+    route: "/admin/patients",
   },
   {
     label: "Appointments",
     icon: "calendar",
-    route: "/appointments",
+    route: "/admin/appointments",
   },
   {
     label: "Doctors",
     icon: "medkit",
-    route: "/doctors",
+    route: "/admin/doctors",
   },
   {
     label: "Pharmacy",
     icon: "medical",
-    route: "/pharmacy",
+    route: "/admin/pharmacy",
   },
   {
     label: "Laboratory",
     icon: "flask",
-    route: "/laboratory",
+    route: "/admin/laboratory",
   },
   {
     label: "Admissions",
     icon: "bed",
-    route: "/admissions",
+    route: "/admin/admissions",
   },
   {
     label: "Billing",
     icon: "card",
-    route: "/billing",
+    route: "/admin/billing",
   },
   {
     label: "Profile",
     icon: "person",
-    route: "/profile",
+    route: "/admin/profile",
   },
 ];
 
@@ -126,7 +126,7 @@ export default function Sidebar() {
 
       {/* Bottom section */}
       <Pressable
-        onPress={() => router.push("/profile")}
+        onPress={() => router.push("/admin/profile")}
         style={styles.bottomItem}
       >
         <Ionicons
